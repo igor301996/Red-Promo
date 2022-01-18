@@ -1,0 +1,28 @@
+services:
+  docker-nginx:
+    image: nginx
+    ports:
+      - '8094:80'
+    volumes:
+      - ../:/var/www
+      - ./nginx:/etc/nginx/conf.d
+
+  docker-mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: database
+
+  docker-phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8095:80"
+    environment:
+      PMA_HOST: docker-mysql
+      PMA_PORT: 3306
+
+  docker-php-fpm:
+    build:
+      context: ./php-fpm
+    volumes:
+      - ../:/var/www
