@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::prefix('test')->middleware('auth')->group(function (){
+    Route::get('/', function () {
+        return view('welcome');
+    });
+});
 Route::get('/', function () {
     return view('welcome');
 });
