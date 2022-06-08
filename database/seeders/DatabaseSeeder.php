@@ -19,5 +19,8 @@ class DatabaseSeeder extends Seeder
 //            RegionSeeder::class,
 //            RoleSeeder::class,
 //        ]);
+        $this->call(UserSeeder::class);
+        $this->call(SubjectSeeder::class);
+        $this->call(ResearchWorktSeeder::class);
     }
 }

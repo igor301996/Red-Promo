@@ -45,7 +45,9 @@ class User extends Authenticatable
 
     /************ RELATIONS START ************/
 
-
+    public function subjects(){
+        return $this->hasMany(Subject::class);
+    }
 
     /************ RELATIONS FINISH ************/
 }
