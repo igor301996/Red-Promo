@@ -4,161 +4,112 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SubjectStoreRequest;
 use App\Http\Requests\SubjectUpdateRequest;
-use App\Models\Subject;
+use App\Interfaces\SubjectRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class SubjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var SubjectRepositoryInterface
+     */
+    private SubjectRepositoryInterface $subjectRepository;
+
+    /**
+     * SubjectController constructor.
+     * @param SubjectRepositoryInterface $subjectRepository
+     */
+    public function __construct(SubjectRepositoryInterface $subjectRepository)
+    {
+        $this->subjectRepository = $subjectRepository;
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $subject = Subject::orderBy('id', 'desc')
-            ->paginate(10);
-
-        if (!$subject) {
-            return response([
-                'status' => 'error',
-                'msg' => 'Не удалось получить данные',
-            ], 400);
-        }
-
-        return response([
-            'status' => 'ok',
-            'data' => $subject
-        ], 200);
+        return response()->json(
+            [
+                'data' => $this->subjectRepository->getAllSubject()
+            ]
+        );
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
      * @param SubjectStoreRequest $request
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
     public function create(SubjectStoreRequest $request)
     {
-        $subject = Subject::create([
-            'teacher_id' => $request->input('teacher_id'),
-            'information_about_discipline' => $request->input('information_about_discipline'),
-            'summary_topic' => $request->input('summary_topic'),
-            'structure' => $request->input('structure'),
-            'self_training' => $request->input('self_training'),
-            'list_developed_competencies' => $request->input('list_developed_competencies')
+        $subjectDetails = $request->only([
+            'teacher_id',
+            'information_about_discipline',
+            'summary_topic',
+            'structure',
+            'self_training',
+            'list_developed_competencies',
         ]);
 
-        if (!$subject) {
-            return response([
-                'status' => 'error',
-                'msg' => 'Запись не создалась',
-            ], 400);
-        }
+        return response()->json(
+            [
+                'data' => $this->subjectRepository->createSubject($subjectDetails)
+            ],
+            Response::HTTP_CREATED
+        );
+    }
 
-        return response([
-            'status' => 'ok',
-            'data' => $subject
-        ], 201);
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(Request $request)
+    {
+        $subjectId = $request->route('id');
+
+        return response()->json(
+            [
+                'data' => $this->subjectRepository->getSubjectById($subjectId)
+            ]
+        );
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param SubjectUpdateRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function update(SubjectUpdateRequest $request)
     {
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $subject = Subject::find($id)->first();
-
-        if (!$subject) {
-            return response([
-                'status' => 'error',
-                'msg' => 'Не удалось получить запись',
-            ], 400);
-        }
-
-        return response([
-            'status' => 'ok',
-            'data' => $subject
-        ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Subject  $subject
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Subject $subject)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Subject  $subject
-     * @return \Illuminate\Http\Response
-     */
-    public function update(SubjectUpdateRequest $request, Subject $subject)
-    {
-        $subjectUpdate = $subject->update([
-            'teacher_id' => $request->input('teacher_id'),
-            'information_about_discipline' => $request->input('information_about_discipline'),
-            'summary_topic' => $request->input('summary_topic'),
-            'structure' => $request->input('structure'),
-            'self_training' => $request->input('self_training'),
-            'list_developed_competencies' => $request->input('list_developed_competencies')
+        $subjectId = $request->route('id');
+        $subjectDetails = $request->only([
+            'teacher_id',
+            'information_about_discipline',
+            'summary_topic',
+            'structure',
+            'self_training',
+            'list_developed_competencies',
         ]);
 
-        if (!$subjectUpdate) {
-            return response([
-                'status' => 'error',
-                'msg' => 'Не удалось обновить запись',
-            ], 400);
-        }
-
-        return response([
-            'status' => 'ok',
-            'data' => $subjectUpdate
-        ], 200);
+        return response()->json(
+            [
+                'data' => $this->subjectRepository->updateSubject($subjectId, $subjectDetails)
+            ]
+        );
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Subject  $subject
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Subject $subject)
+    public function destroy(Request $request)
     {
-        $subjectDelete = $subject->delete();
+        $subjectId = $request->route('id');
 
-        if (!$subjectDelete) {
-            return response([
-                'status' => 'error',
-                'msg' => 'Не удалось удалить запись',
-            ], 400);
-        }
-
-        return response([
-            'status' => 'ok',
-            'data' => $subjectDelete
-        ], 200);
+        return response()->json(
+            [
+                'data' => $this->subjectRepository->deleteSubject($subjectId)
+            ]
+        );
     }
 }
