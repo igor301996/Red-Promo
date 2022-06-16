@@ -9,8 +9,14 @@ class Subject extends Model
 {
     use HasFactory;
 
+    /**
+     * @var string
+     */
     protected $table = 'subjects';
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'teacher_id',
         'information_about_discipline',
@@ -22,7 +28,7 @@ class Subject extends Model
 
     /************ RELATIONS START ************/
 
-    public function user()
+    public function users()
     {
         return $this->belongsTo(User::class);
     }

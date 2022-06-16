@@ -8,34 +8,34 @@ use App\Models\Subject;
 class SubjectRepository implements SubjectRepositoryInterface
 {
     /**
-     * @return Subject[]|\Illuminate\Database\Eloquent\Collection
+     * @return object
      */
-    public function getAllSubject()
+    public function getAllSubject(): object
     {
         return Subject::all();
     }
 
     /**
      * @param $id
-     * @return mixed
+     * @return object
      */
-    public function getSubjectById($id)
+    public function getSubjectById($id): object
     {
         return Subject::findOrFail($id);
     }
 
     /**
      * @param $id
-     * @return int|mixed
+     * @return int
      */
-    public function deleteSubject($id)
+    public function deleteSubject($id): int
     {
         return Subject::destroy($id);
     }
 
     /**
      * @param array $subjectDetail [description]
-     * @return mixed
+     * @return object
      * @option unsignedBigInteger  "teacher_id"         [description]
      * @option text  "information_about_discipline"     [description]
      * @option text "summary_topic"                     [description]
@@ -43,7 +43,7 @@ class SubjectRepository implements SubjectRepositoryInterface
      * @option json  "self_training"                    [description]
      * @option json  "list_developed_competencies"      [description]
      */
-    public function createSubject(array $subjectDetail)
+    public function createSubject(array $subjectDetail): object
     {
         return Subject::create($subjectDetail);
     }
@@ -57,9 +57,9 @@ class SubjectRepository implements SubjectRepositoryInterface
      * @option json "structure"                         [description]
      * @option json  "self_training"                    [description]
      * @option json  "list_developed_competencies"      [description]
-     * @return mixed
+     * @return int
      */
-    public function updateSubject($id, array $subjectDetail)
+    public function updateSubject($id, array $subjectDetail): int
     {
         return Subject::whereId($id)->update($subjectDetail);
     }

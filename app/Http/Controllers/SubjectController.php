@@ -7,6 +7,7 @@ use App\Http\Requests\SubjectUpdateRequest;
 use App\Interfaces\SubjectRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class SubjectController extends Controller
 {
@@ -27,7 +28,7 @@ class SubjectController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         return response()->json(
             [
@@ -40,7 +41,7 @@ class SubjectController extends Controller
      * @param SubjectStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(SubjectStoreRequest $request)
+    public function create(SubjectStoreRequest $request): JsonResponse
     {
         $subjectDetails = $request->only([
             'teacher_id',
@@ -64,7 +65,7 @@ class SubjectController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request)
+    public function show(Request $request): JsonResponse
     {
         $subjectId = $request->route('id');
 
@@ -79,7 +80,7 @@ class SubjectController extends Controller
      * @param SubjectUpdateRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(SubjectUpdateRequest $request)
+    public function update(SubjectUpdateRequest $request): JsonResponse
     {
         $subjectId = $request->route('id');
         $subjectDetails = $request->only([
@@ -102,7 +103,7 @@ class SubjectController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): JsonResponse
     {
         $subjectId = $request->route('id');
 
